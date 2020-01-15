@@ -202,7 +202,7 @@ func (h *HTML) reconcile(prev *HTML) []Mounter {
 		h.createNode()
 	}
 
-	if h.node != prev.node {
+	if !h.node.Equal(prev.node) {
 		// reconcile properties against empty prev for new nodes.
 		h.reconcileProperties(&HTML{})
 	} else {
@@ -374,7 +374,7 @@ func (h *HTML) reconcileChildren(prev *HTML) (pendingMounts []Mounter) {
 		//
 		// TODO(pdf): Add tests for node equality, keyed children
 		var (
-			new     = h.node != prev.node
+			new     = h.node.Equal(prev.node)
 			nextKey interface{}
 		)
 		keyer, isKeyer := nextChild.(Keyer)
@@ -1282,6 +1282,7 @@ type jsObject interface {
 	Bool() bool
 	Int() int
 	Float() float64
+	Equal(jsObject) bool
 }
 
 var isTest bool
@@ -1290,10 +1291,10 @@ func init() {
 	if isTest {
 		return
 	}
-	if global == nil {
-		panic("vecty: only GopherJS and WebAssembly compilation is supported")
-	}
-	if global.Get("document") == undefined {
-		panic("vecty: only running inside a browser is supported")
-	}
+	// if global == nil {
+	// 	panic("vecty: only GopherJS and WebAssembly compilation is supported")
+	// }
+	// if global.Get("document") == undefined {
+	// 	panic("vecty: only running inside a browser is supported")
+	// }
 }

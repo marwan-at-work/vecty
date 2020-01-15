@@ -1,4 +1,4 @@
-// +build go1.12,wasm,js js
+// +build js,wasm
 
 package vecty
 
@@ -73,10 +73,10 @@ func valueOf(v interface{}) jsObject {
 }
 
 func wrapObject(j js.Value) jsObject {
-	if j == js.Null() {
+	if j.Equal(js.Null()) {
 		return nil
 	}
-	if j == js.Undefined() {
+	if j.Equal(js.Undefined()) {
 		return undefined
 	}
 	return wrappedObject{j: j}
@@ -94,6 +94,13 @@ func unwrap(value interface{}) interface{} {
 
 type wrappedObject struct {
 	j js.Value
+}
+
+func (w wrappedObject) Equal(o jsObject) bool {
+	if o == nil {
+		return false
+	}
+	return w.j.Equal(o.(wrappedObject).j)
 }
 
 func (w wrappedObject) Set(key string, value interface{}) {
