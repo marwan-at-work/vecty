@@ -109,7 +109,6 @@ func (w wrappedObject) Get(key string) jsObject {
 }
 
 func (w wrappedObject) Delete(key string) {
-	println("bruh")
 	js.Global().Call("$vectyDelete", w.j, key)
 	// w.j.Call("delete", key)
 }
