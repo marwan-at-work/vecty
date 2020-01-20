@@ -10,6 +10,10 @@ type Event struct {
 	Target js.Value
 }
 
+func init() {
+	js.Global().Call("eval", "$vectyDelete = function(obj, key) { delete(obj[key])}")
+}
+
 // Node returns the underlying JavaScript Element or TextNode.
 //
 // It panics if it is called before the DOM node has been attached, i.e. before
@@ -105,7 +109,9 @@ func (w wrappedObject) Get(key string) jsObject {
 }
 
 func (w wrappedObject) Delete(key string) {
-	w.j.Call("delete", key)
+	println("bruh")
+	js.Global().Call("$vectyDelete", w.j, key)
+	// w.j.Call("delete", key)
 }
 
 func (w wrappedObject) Call(name string, args ...interface{}) jsObject {
